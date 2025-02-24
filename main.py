@@ -52,14 +52,8 @@ async def blink(canvas, row, column, symbol='*', offset_tics=0):
             await asyncio.sleep(0)
 
 
-
 async def animate_spaceship(canvas, row, column, row_max, column_max, frames):
     for frame in cycle(frames):
-        draw_frame(canvas, row, column, frame)
-        # await Sleep(0.1)
-        await asyncio.sleep(0)
-
-        draw_frame(canvas, row, column, frame, negative=True)
         row_dir, column_dir, space = read_controls(canvas)
         frame_size_rows, frame_size_columns = get_frame_size(frame)
         if row_dir > 0 and row + frame_size_rows < row_max - 1:
@@ -70,6 +64,9 @@ async def animate_spaceship(canvas, row, column, row_max, column_max, frames):
             column += column_dir
         elif column_dir < 0 and column > 1:
             column += column_dir
+        draw_frame(canvas, row, column, frame)
+        await asyncio.sleep(0)
+        draw_frame(canvas, row, column, frame, negative=True)
 
 
 def draw(canvas):
@@ -97,14 +94,18 @@ def draw(canvas):
 
     frames = []
     with open("./animations/rocket_frame_2.txt", "r") as f:
-        frames.append(f.read())
+        frame = f.read()
+        frames.append(frame)
+        frames.append(frame)
     with open("./animations/rocket_frame_1.txt", "r") as f:
-        frames.append(f.read())
+        frame = f.read()
+        frames.append(frame)
+        frames.append(frame)
     coroutines.append(
         animate_spaceship(canvas, max_y/2, max_x/2, max_y, max_x, frames)
     )  # корабль
     while coroutines:
-        time.sleep(0.1)
+        time.sleep(1)
         for coroutine in coroutines.copy():
             try:
                 coroutine.send(None)
