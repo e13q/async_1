@@ -33,10 +33,10 @@ async def fire(canvas, start_row, start_column, rows_speed=-0.3, columns_speed=0
         column += columns_speed
 
 
-async def blink(canvas, row, column, symbol='*'):
+async def blink(canvas, row, column, symbol='*', offset_tics=0):
     while True:
         canvas.addstr(row, column, symbol, curses.A_DIM)
-        for i in range(5 + random.randint(0, 20)):
+        for i in range(5 + offset_tics):
             await asyncio.sleep(0)
 
         canvas.addstr(row, column, symbol)
@@ -86,7 +86,8 @@ def draw(canvas):
         (blink(
             canvas,
             *positions.pop(0),
-            symbol=random.choice(stars_symbols)
+            symbol=random.choice(stars_symbols),
+            offset_tics=random.randint(0, 20)
         )) for i in range(stars_count)
     ]  # звезды
 
